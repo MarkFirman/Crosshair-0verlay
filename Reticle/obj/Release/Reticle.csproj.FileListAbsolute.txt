@@ -1,0 +1,16 @@
+C:\Users\Mark\source\repos\Reticle\Reticle\bin\Release\CrosshairOverlay.exe.config
+C:\Users\Mark\source\repos\Reticle\Reticle\bin\Release\CrosshairOverlay.exe
+C:\Users\Mark\source\repos\Reticle\Reticle\bin\Release\CrosshairOverlay.pdb
+C:\Users\Mark\source\repos\Reticle\Reticle\obj\Release\Crosshair.g.cs
+C:\Users\Mark\source\repos\Reticle\Reticle\obj\Release\CrosshairSettings.g.cs
+C:\Users\Mark\source\repos\Reticle\Reticle\obj\Release\App.g.cs
+C:\Users\Mark\source\repos\Reticle\Reticle\obj\Release\CrosshairOverlay_MarkupCompile.cache
+C:\Users\Mark\source\repos\Reticle\Reticle\obj\Release\CrosshairOverlay_MarkupCompile.lref
+C:\Users\Mark\source\repos\Reticle\Reticle\obj\Release\Crosshair.baml
+C:\Users\Mark\source\repos\Reticle\Reticle\obj\Release\CrosshairSettings.baml
+C:\Users\Mark\source\repos\Reticle\Reticle\obj\Release\CrosshairOverlay.g.resources
+C:\Users\Mark\source\repos\Reticle\Reticle\obj\Release\CrosshairOverlay.Properties.Resources.resources
+C:\Users\Mark\source\repos\Reticle\Reticle\obj\Release\Reticle.csproj.GenerateResource.cache
+C:\Users\Mark\source\repos\Reticle\Reticle\obj\Release\Reticle.csproj.CoreCompileInputs.cache
+C:\Users\Mark\source\repos\Reticle\Reticle\obj\Release\CrosshairOverlay.exe
+C:\Users\Mark\source\repos\Reticle\Reticle\obj\Release\CrosshairOverlay.pdb
