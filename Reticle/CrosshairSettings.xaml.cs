@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -39,16 +41,43 @@ namespace Reticle
         private Crosshair crosshairWindow;
 
         /// <summary>
+        /// The selected HOT KEYS
+        /// </summary>
+        private CrosshairOverlay.Class.Hotkey.Key ModifierKey;
+        private CrosshairOverlay.Class.Hotkey.Key Hotkey;
+
+        /// <summary>
+        /// Determines the Hotkey ID
+        /// Unique for each set of hotkeys (this app onyl hots 1 hotkey)
+        /// </summary>
+        private const int HotkeyID = 9000;
+
+        /// <summary>
+        /// Window Source
+        /// Used for hotkeys
+        /// </summary>
+        private IntPtr _windowHandle;
+        private HwndSource _source;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public MainWindow()
         {
             InitializeComponent();
+
+            // Load the remembered hot keys
+            ModifierKey = CrosshairOverlay.Properties.Settings.Default.ModifierKey != 0 ? CrosshairOverlay.Class.Hotkey.FindKeyByWindowsNum(CrosshairOverlay.Properties.Settings.Default.ModifierKey) : CrosshairOverlay.Class.Hotkey.Key.CONTROL;
+            Hotkey = CrosshairOverlay.Properties.Settings.Default.HotKey != 0 ? CrosshairOverlay.Class.Hotkey.FindKeyByWindowsNum(CrosshairOverlay.Properties.Settings.Default.HotKey) : CrosshairOverlay.Class.Hotkey.Key.C;
+
+            // Update the UI with the selected hotkeys
+            HotKeyModToggleButton.Content = ModifierKey.ToString();
+            HotKeyToggleButton.Content = Hotkey.ToString();
         }
 
 
         /// <summary>
-        /// Starts the reticle overlay
+        /// Starts the crosshair overlay
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -67,6 +96,9 @@ namespace Reticle
 
                         // Close the crosshair window
                         crosshairWindow.Close();
+
+                        // Set the crosshair window to null
+                        crosshairWindow = null;
 
                         break;
 
@@ -201,6 +233,172 @@ namespace Reticle
 
         }
 
+
+
+
+
+        /// <summary>
+        /// Handles which hotkey is currently being setup
+        /// NONE
+        /// HOTKEY
+        /// MODIFIER
+        /// </summary>
+        private enum KeyMonitorType
+        {
+            None = 0,
+            HotKey = 1,
+            HotKeyModifier = 2
+        }
+        private KeyMonitorType KeyMonitor = KeyMonitorType.None;
+
+
+        /// <summary>
+        /// Allows the hot key to be set
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SetHotKey_Click(object sender, EventArgs e)
+        {
+            KeyMonitor = KeyMonitorType.HotKey;
+        }
+
+        /// <summary>
+        /// Allows the hot key modifier to be set
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        private void SetHotKeyModifier_Click(object sender, EventArgs e)
+        {
+            KeyMonitor = KeyMonitorType.HotKeyModifier;
+        }
+
+
+
+
+
+
+        
+
+
+        // Register the initial hotkey
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            // Load the initial hotkey setup
+            _windowHandle = new WindowInteropHelper(this).Handle;
+            _source = HwndSource.FromHwnd(_windowHandle);
+            _source.AddHook(HwndHook);
+
+            CrosshairOverlay.Class.Hotkey.RegisterHotKey(_windowHandle, HotkeyID, (uint)ModifierKey, (uint)Hotkey);
+
+        }
+
+        /// <summary>
+        /// Fallback for when the hotkey is triggered
+        /// </summary>
+        /// <param name="hwnd"></param>
+        /// <param name="msg"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <param name="handled"></param>
+        /// <returns></returns>
+        private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            const int WM_HOTKEY = 0x0312;
+            switch (msg)
+            {
+                case WM_HOTKEY:
+                    switch (wParam.ToInt32())
+                    {
+                        case HotkeyID:
+
+                            int vkey = (((int)lParam >> 16) & 0xFFFF);
+                            if (vkey == (int)CrosshairOverlay.Class.Hotkey.Key.CONTROL)
+                            {
+                            }
+
+                            if(crosshairWindow != null)
+                            {
+                                if (crosshairWindow.Visibility == Visibility.Visible)
+                                {
+                                    crosshairWindow.Visibility = Visibility.Hidden;
+                                }
+                                else {
+                                    crosshairWindow.Visibility = Visibility.Visible;
+                                }
+                            }
+
+                            handled = true;
+                            break;
+                    }
+                    break;
+            }
+            return IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// Remove all hook instances when the application is closed
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnClosed(EventArgs e)
+        {
+            _source.RemoveHook(HwndHook);
+            CrosshairOverlay.Class.Hotkey.UnregisterHotKey(_windowHandle, HotkeyID);
+            base.OnClosed(e);
+        }
+
+        /// <summary>
+        /// Used to setup hotkeys
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (KeyMonitor)
+            {
+                case KeyMonitorType.None:
+
+                    return;
+                    break;
+                case KeyMonitorType.HotKeyModifier:
+
+                    ModifierKey = CrosshairOverlay.Class.Hotkey.FindKeyByWindowsNum(Convert.ToInt32("0x" + e.Key.ToString("x"), 16));
+
+                    HotKeyModToggleButton.Content = ModifierKey.ToString();
+                    CrosshairOverlay.Properties.Settings.Default.ModifierKey = Convert.ToInt32("0x" + e.Key.ToString("x"), 16);
+                    CrosshairOverlay.Properties.Settings.Default.Save();
+
+                    _source.RemoveHook(HwndHook);
+                    CrosshairOverlay.Class.Hotkey.UnregisterHotKey(_windowHandle, HotkeyID);
+
+                    break;
+                case KeyMonitorType.HotKey:
+
+                    Hotkey = CrosshairOverlay.Class.Hotkey.FindKeyByWindowsNum(Convert.ToInt32("0x" + e.Key.ToString("x"), 16));
+
+                    HotKeyToggleButton.Content = Hotkey.ToString();
+                    CrosshairOverlay.Properties.Settings.Default.HotKey = Convert.ToInt32("0x" + e.Key.ToString("x"), 16);
+                    CrosshairOverlay.Properties.Settings.Default.Save();
+
+                    _source.RemoveHook(HwndHook);
+                    CrosshairOverlay.Class.Hotkey.UnregisterHotKey(_windowHandle, HotkeyID);
+
+                    break;
+
+            }
+
+            // Load the new hotkey setup
+            _windowHandle = new WindowInteropHelper(this).Handle;
+            _source = HwndSource.FromHwnd(_windowHandle);
+            _source.AddHook(HwndHook);
+
+            CrosshairOverlay.Class.Hotkey.RegisterHotKey(_windowHandle, HotkeyID, (uint)ModifierKey, (uint)Hotkey);
+
+            KeyMonitor = KeyMonitorType.None;
+        }
+
+
         /// <summary>
         /// Occurs when the window is no longer the frame of reference
         /// </summary>
@@ -221,5 +419,7 @@ namespace Reticle
         {
             Application.Current.Shutdown(0);
         }
+
+     
     }
 }

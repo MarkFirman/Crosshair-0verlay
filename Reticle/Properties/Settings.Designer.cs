@@ -22,5 +22,29 @@ namespace CrosshairOverlay.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ModifierKey {
+            get {
+                return ((int)(this["ModifierKey"]));
+            }
+            set {
+                this["ModifierKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int HotKey {
+            get {
+                return ((int)(this["HotKey"]));
+            }
+            set {
+                this["HotKey"] = value;
+            }
+        }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Reticle"
         mc:Ignorable="d" Closed="Window_Closed"
-        Title="Crosshair 0verlay" Height="365" Width="400" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Deactivated="Window_Deactivated">
+        Title="Crosshair 0verlay" Height="365" Width="400" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Deactivated="Window_Deactivated" KeyDown="Window_KeyDown">
     <Grid>
 
         <!-- Page Grid -->
@@ -103,7 +103,9 @@
                     <!-- Hotkeys Textblock -->
                     <TextBlock Grid.Row="0" FontSize="15" Margin="0,10,0,0" FontWeight="Bold">HOTKEYS</TextBlock>
                     <TextBlock Grid.Row="1" FontSize="12" Margin="0,0,0,0" FontWeight="Normal" FontStyle="Italic">Toggle Reticle ON/OFF</TextBlock>
-                    <Button IsEnabled="False" Name="HotKeyToggleButton" Grid.Row="2" Width="40" Margin="0,0,0,0" HorizontalAlignment="Left">.</Button>
+                    <Button IsEnabled="True" Click="SetHotKeyModifier_Click" Name="HotKeyModToggleButton" Grid.Row="2" Width="65" Margin="0,0,0,0" HorizontalAlignment="Left">CONTROL</Button>
+                    <TextBlock  Grid.Row="2" FontSize="20" Margin="75,4,0,0">+</TextBlock>
+                    <Button IsEnabled="True" Click="SetHotKey_Click" Name="HotKeyToggleButton" Grid.Row="2" Width="65" Margin="100,0,0,0" HorizontalAlignment="Left">C</Button>
 
                     <TextBlock FontStyle="Italic" Grid.Row="5">by www.markfirman.co.uk</TextBlock>
                     
