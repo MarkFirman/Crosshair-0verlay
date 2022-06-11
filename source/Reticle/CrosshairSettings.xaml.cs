@@ -41,6 +41,12 @@ namespace Reticle
         private Crosshair crosshairWindow;
 
         /// <summary>
+        /// Crosshair offset
+        /// </summary>
+        public double crosshairXOffset;
+        public double crosshairYOffset;
+
+        /// <summary>
         /// The selected HOT KEYS
         /// </summary>
         private CrosshairOverlay.Class.Hotkey.Key ModifierKey;
@@ -420,6 +426,27 @@ namespace Reticle
             Application.Current.Shutdown(0);
         }
 
-     
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            switch( ((Slider)sender).Name ){
+
+                case "xslider":
+
+                    crosshairXOffset = ((Slider)sender).Value;
+
+                    break;
+                case "yslider":
+
+                    crosshairYOffset = ((Slider)sender).Value;
+
+                    break;
+
+            }
+
+            if(crosshairWindow != null)
+            {
+                crosshairWindow.HandleOffset();
+            }
+        }
     }
 }

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "31ac661a-6c32-4d4a-82ac-9d0195602518": {
+      "ProjectGuid": "31ac661a-6c32-4d4a-82ac-9d0195602518",
+      "DisplayName": "Reticle",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}

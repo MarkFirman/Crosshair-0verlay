@@ -107,8 +107,12 @@
                     <TextBlock  Grid.Row="2" FontSize="20" Margin="75,4,0,0">+</TextBlock>
                     <Button IsEnabled="True" Click="SetHotKey_Click" Name="HotKeyToggleButton" Grid.Row="2" Width="65" Margin="100,0,0,0" HorizontalAlignment="Left">C</Button>
 
-                    <TextBlock FontStyle="Italic" Grid.Row="5">by www.markfirman.co.uk</TextBlock>
-                    
+                    <TextBlock FontStyle="Italic" Grid.Row="4" Margin="17,0,-17,0">by www.mark-firman.co.uk</TextBlock>
+                    <TextBlock Grid.Row="3" FontSize="15" Margin="0,16,0,138" FontWeight="Bold"><Run Text="OFFSET"/></TextBlock>
+                    <Slider Name="xslider" ValueChanged="Slider_ValueChanged" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" Maximum="100" Value="50" Orientation="Horizontal" Margin="47,89,0,0" />
+                    <Slider Name="yslider" ValueChanged="Slider_ValueChanged" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="22" Maximum="100" Value="50" Orientation="Vertical" Height="120" Margin="12,39,0,0" />
+
+
                 </Grid>
 
             </Grid>

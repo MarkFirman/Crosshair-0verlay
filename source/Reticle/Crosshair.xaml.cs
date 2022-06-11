@@ -38,6 +38,9 @@ namespace Reticle
             // Set reference to the settings window
             this.settingsWindow = crosshairSettingsWindow;
 
+            // Handle the offset
+            HandleOffset();
+
             // Set self window to be center of the screen
             // Startup is in the middle of the screen, but that does not always work, so we should get the screen settings
             // including height and width and set the to the center manually
@@ -65,10 +68,11 @@ namespace Reticle
                 // Create a new action to continually set the window to topmost
                 // Intentionally do not await the result
                 // Some games may call themselves topmost over and over, therefore we also need to repeat to prevent
-                // third party apps from taking the top
+                // third party apps from taking the top spot
                 // This can cause flickering, but that can be dampened using waits and retries
                 App.Current.Dispatcher.BeginInvoke(new Action(async () => await RetrySetTopMost()));
             }
+
         }
 
         /// <summary>
@@ -112,41 +116,24 @@ namespace Reticle
         }
 
 
-        /// <summary>
-        /// Hides / Shows the cross hair window when the hotkey is pressed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Window_KeyDown(object sender, KeyEventArgs e)
+
+        double lXoffset;
+        double lYoffset;
+
+        public void HandleOffset()
         {
-            try
-            {
-                if (e.Key == Key.OemPeriod)
-                {
-                    if (this.Visibility == Visibility.Visible)
-                    {
-                        this.Visibility = Visibility.Collapsed;
-                    }
-                    else
-                    {
-                        this.Visibility = Visibility.Visible;
-                    }
-                }
 
-                this.Focus();
+            double differenceX = (settingsWindow.crosshairXOffset - lXoffset) * 4;
+            double differenceY = (settingsWindow.crosshairYOffset - lYoffset) * 4;
 
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("An error occured whilst attempting to use the hotkey");
-            }
+
+            this.Left += differenceX;
+            this.Top -= differenceY;
+ 
+            lXoffset = settingsWindow.crosshairXOffset;
+            lYoffset = settingsWindow.crosshairYOffset;
+
         }
-
-
-
-
-
-
 
 
 
